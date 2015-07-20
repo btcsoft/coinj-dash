@@ -70,6 +70,52 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Verify the dependency chain: see https://github.com/gary-rowe/BitcoinjEnforcerRules for
+                 more information on this.-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <DependencyConvergence/>
+                                <digestRule implementation="uk.co.froot.maven.enforcer.DigestRule">
+
+                                    <!-- Create a snapshot to build the list of URNs below -->
+                                    <buildSnapshot>true</buildSnapshot>
+
+                                    <!-- List of required hashes -->
+                                    <!-- Format is URN of groupId:artifactId:version:type:classifier:scope:hash -->
+                                    <!-- classifier is "null" if not present -->
+                                    <urns>
+                                        <urn>org.coinj:x11-specs:1.01-SNAPSHOT:jar:null:compile:db206d0e4531cd64b2387c09320dad29eda12978</urn>
+                                        <urn>com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4:jar:null:compile:d4b42ed76a166a81dbac613339eed3343be6bd2d</urn>
+                                        <!-- A check for the rules themselves -->
+                                        <urn>uk.co.froot.maven.enforcer:digest-enforcer-rules:0.0.1:jar:null:runtime:16a9e04f3fe4bb143c42782d07d5faf65b32106f</urn>
+                                    </urns>
+                                </digestRule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+
+                <!-- Ensure we download the enforcer rules -->
+                <dependencies>
+                    <dependency>
+                        <groupId>uk.co.froot.maven.enforcer</groupId>
+                        <artifactId>digest-enforcer-rules</artifactId>
+                        <version>0.0.1</version>
+                    </dependency>
+                </dependencies>
+
+            </plugin>
         </plugins>
     </build>
 
