@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>dash</artifactId>
+        <groupId>org.coinj</groupId>
+        <version>0.6-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>dash-core</artifactId>
+
+    <profiles>
+        <profile>
+            <id>update-protobuf</id>
+            <activation>
+                <property>
+                    <name>updateProtobuf</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>compile-protoc</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <tasks>
+                                        <path id="proto.path">
+                                            <fileset dir="src">
+                                                <include name="**/*.proto"/>
+                                            </fileset>
+                                        </path>
+                                        <pathconvert pathsep=" " property="proto.files" refid="proto.path"/>
+                                        <exec executable="protoc" failonerror="true">
+                                            <arg value="--java_out=${project.basedir}/src/main/java"/>
+                                            <arg value="-I${project.basedir}/src"/>
+                                            <!--suppress MavenModelInspection -->
+                                            <arg line="${proto.files}"/>
+                                        </exec>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.coinj</groupId>
+            <artifactId>x11-specs</artifactId>
+            <version>1.01-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>wallet-protos-default</artifactId>
+                    <groupId>org.coinj</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+            <artifactId>concurrentlinkedhashmap-lru</artifactId>
+            <version>1.4</version>
+        </dependency>
+    </dependencies>
+
+</project>
