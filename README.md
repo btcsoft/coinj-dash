@@ -17,3 +17,4 @@ Contains experimental modes of networking, including full or partial Masternodes
 * [Orchid](https://github.com/subgraph/Orchid) - for secure communications over [TOR](https://www.torproject.org)
 * [Google Protocol Buffers](https://code.google.com/p/protobuf/) - for use with serialization and hardware communications
 * [BitcoinJ](https://github.com/bitcoinj/bitcoinj) - upstream library, inner API of which was made alt-coins friendly and less static constants oriented
+* [concurrentlinkedhashmap](https://github.com/ben-manes/concurrentlinkedhashmap) - A high performance version of ```java.util.LinkedHashMap``` for use as a software cache.
